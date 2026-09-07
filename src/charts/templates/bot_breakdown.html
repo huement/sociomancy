@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Pillar 5: Comment Authenticity Breakdown{% endblock %}
+{% block subtitle %}Detection of Artificial Spam, Duplicate Clusters, and Copy-Paste Networks{% endblock %}
+{% block chart_script %}
+  const option = {
+  animationDuration: 2000,
+  grid: { left: '15%', right: '10%', top: '25%', bottom: '20%' },
+  xAxis: { type: 'value', max: 100, axisLabel: { formatter: '{value}%' } },
+  yAxis: { type: 'category', data: ['@{{ target_handle }}'] },
+  series: [
+  { name: 'Organic Unique', type: 'bar', stack: 'total', data: [{{ authenticity_score }}], itemStyle: { color: '#00e676' } },
+  { name: 'Exact Duplicates', type: 'bar', stack: 'total', data: [{{ duplicate_pct }}], itemStyle: { color: '#ffb74d' } },
+  { name: 'Semantic Copy Clusters', type: 'bar', stack: 'total', data: [{{ cluster_pct }}], itemStyle: { color: '#ff5252' } }
+  ]
+  };
+  myChart.setOption(option);
+{% endblock %}

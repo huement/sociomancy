@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Niche Peer Discovery Matrix{% endblock %}
+{% block subtitle %}Semantic Content Similarity vs Actual Audience Overlap{% endblock %}
+{% block chart_script %}
+  const rawData = {{ scatter_data | tojson }};
+  const option = {
+  animationDuration: 2500,
+  grid: { left: '10%', right: '10%', top: '12%', bottom: '12%' },
+  xAxis: {
+  type: 'value',
+  name: 'Semantic Content Similarity',
+  nameLocation: 'middle',
+  nameGap: 30,
+  min: 0.6, max: 1.0,
+  splitLine: { lineStyle: { color: 'rgba(255, 255, 255, 0.1)' } }
+  },
+  yAxis: {
+  type: 'value',
+  name: 'Audience Overlap Affinity',
+  nameLocation: 'middle',
+  nameGap: 40,
+  splitLine: { lineStyle: { color: 'rgba(255, 255, 255, 0.1)' } }
+  },
+  series: [{
+  type: 'scatter',
+  symbolSize: 22,
+  data: rawData.map(item => ({
+  value: [item.semantic, item.affinity],
+  name: item.handle,
+  itemStyle: { color: item.source.includes('Approach A') ? '#ff4d4d' : '#29b6f6' }
+  })),
+  label: {
+  show: true,
+  formatter: '{b}',
+  position: 'top',
+  color: '#f4f4f5',
+  fontSize: 14,
+  fontWeight: 'bold'
+  }
+  }]
+  };
+  myChart.setOption(option);
+{% endblock %}

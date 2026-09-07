@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}5-Pillar Statistical DNA{% endblock %}
+{% block subtitle %}Target Channel @{{ target_handle }} vs Control Group Niche Average (0.0σ){% endblock %}
+{% block chart_script %}
+  const option = {
+  animationDuration: 2500,
+  animationEasing: 'cubicOut',
+  radar: {
+  indicator: [
+  { name: 'Toxicity Rate', max: 3, min: -3 },
+  { name: 'Tribe Retention', max: 3, min: -3 },
+  { name: 'Parasocial Density', max: 3, min: -3 },
+  { name: 'Stress Delta (ΔT)', max: 3, min: -3 },
+  { name: 'Authenticity Score', max: 3, min: -3 }
+  ],
+  shape: 'circle',
+  splitNumber: 4,
+  axisName: { color: '#f4f4f5', fontSize: 18, fontWeight: 'bold' },
+  splitLine: { lineStyle: { color: 'rgba(255, 255, 255, 0.1)' } },
+  splitArea: { areaStyle: { color: ['rgba(255, 255, 255, 0.01)', 'rgba(255, 255, 255, 0.03)'] } }
+  },
+  series: [{
+  type: 'radar',
+  data: [
+  {
+  value: [0, 0, 0, 0, 0],
+  name: 'Niche Baseline (0.0σ)',
+  symbol: 'none',
+  lineStyle: { color: '#71717a', width: 2, type: 'dashed' },
+  areaStyle: { color: 'rgba(113, 113, 122, 0.1)' }
+  },
+  {
+  value: [{{ z_scores.toxicity }}, {{ z_scores.tribe }}, {{ z_scores.parasocial }}, {{ z_scores.stress }}, {{ z_scores.authenticity }}],
+  name: '@{{ target_handle }}',
+  symbolSize: 8,
+  lineStyle: { color: '#ff4d4d', width: 4 },
+  areaStyle: { color: 'rgba(255, 77, 77, 0.3)' }
+  }
+  ]
+  }]
+  };
+  myChart.setOption(option);
+{% endblock %}

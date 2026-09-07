@@ -1,0 +1,24 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+.env
+
+data/processed/*.csv
+data/processed/*.json
+data/raw/*.csv
+data/raw/*.json
+models/*
+
+.DS_Store
+**/.DS_Store
+
+output_cards/**/*.png
+output_cards/**/*.json
+output_charts/**/*.mp4

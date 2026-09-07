@@ -1,0 +1,33 @@
+{
+  "target_handle": "donflurgundy",
+  "control_group_size": 8,
+  "metrics_summary": {
+    "toxicity_rate": {
+      "target_value": 19.04,
+      "niche_mean": 16.68,
+      "niche_std": 4.95,
+      "z_score": 0.48
+    },
+    "tribe_ratio": {
+      "target_value": 26.29,
+      "niche_mean": 8.14,
+      "niche_std": 9.35,
+      "z_score": 1.94
+    },
+    "parasocial_density": {
+      "target_value": 1.78,
+      "niche_mean": 1.0,
+      "niche_std": 0.87,
+      "z_score": 0.89
+    },
+    "stress_delta": {
+      "target_value": -0.0633,
+      "niche_mean": 0.03,
+      "niche_std": 0.07,
+      "z_score": -1.33
+    }
+  },
+  "script_takeaways": [
+    "Core viewer retention/tribe ratio is 1.94 std dev stronger than peers (26.29% vs niche avg of 8.14%)."
+  ]
+}

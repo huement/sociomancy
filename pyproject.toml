@@ -1,0 +1,39 @@
+[project]
+name = "sociomancy"
+version = "0.1.0"
+description = "A command-line tool for analyzing and visualizing social networks."
+readme = "README.md"
+authors = [
+    { name = "Derek Scott", email = "598517+johnny13@users.noreply.github.com" }
+]
+requires-python = ">=3.11, <3.13"
+dependencies = [
+    "google-api-python-client>=2.100.0",
+    "html2image>=2.0.7",
+    "jinja2>=3.1.6",
+    "moviepy>=2.2.1",
+    "numpy<2.0.0",
+    "onnx",
+    "onnxruntime<1.20",
+    "optimum<2.0.0",
+    "pandas>=2.2.0",
+    "pillow>=11.3.0",
+    "pyppeteer>=2.0.0",
+    "python-dotenv",
+    "pyyaml>=6.0.3",
+    "textual>=0.50.0",
+    "torch<=2.2.2",
+    "transformers<4.40.0",
+]
+
+[tool.uv]
+environments = [
+    "sys_platform == 'darwin' and platform_machine == 'x86_64'"
+]
+
+[project.scripts]
+sociomancy = "sociomancy.main:main"
+
+[build-system]
+requires = ["uv_build>=0.12.9,<0.13.0"]
+build-backend = "uv_build"

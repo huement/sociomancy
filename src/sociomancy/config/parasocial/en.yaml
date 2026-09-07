@@ -1,0 +1,138 @@
+version: 1
+language: en
+
+# ------------------------------------------------------------
+# Signal categories
+#
+# weight = contribution to the parasocial score.
+#
+# Higher weights represent stronger evidence of a parasocial
+# relationship rather than simple appreciation or disclosure.
+# ------------------------------------------------------------
+
+categories:
+  perceived_intimacy:
+    weight: 2.5
+    description: "Viewer expresses a perceived personal relationship with the creator."
+
+    patterns:
+      - '\b(i feel like|it feels like)\b.{0,80}\b(i know you|we are friends|you are my friend)\b'
+      - '\b(you understand me|you get me)\b'
+      - '\b(feels like talking to a friend|like hanging out with a friend)\b'
+      - '\b(feel|feels)\b.{0,40}\bconnected to you\b'
+      - '\b(i feel like i.{0,20}know you)\b'
+
+  emotional_reliance:
+    weight: 3.0
+    description: "Viewer describes relying on the creator for emotional support."
+
+    patterns:
+      - '\b(i need (you|your videos|your content))\b'
+      - '\b(you.{0,30}(get me through|help me through))\b'
+      - '\b(your videos|your content|watching you).{0,50}(keeps me going|gets me through)\b'
+      - '\b(i don.t know what i would do without you)\b'
+      - '\b(you.re the only (person|one)).{0,50}(understands|gets me)\b'
+
+  reciprocity_expectation:
+    weight: 3.0
+    description: "Viewer expects personal recognition or interaction from the creator."
+
+    patterns:
+      - '\b(why don.t you respond to me)\b'
+      - '\b(please notice me)\b'
+      - '\b(please reply to me)\b'
+      - '\b(i wish you knew me)\b'
+      - '\b(i wish we could be friends)\b'
+      - '\b(i wish i could meet you)\b'
+      - '\b(you should (know|remember) me)\b'
+
+  behavioral_influence:
+    weight: 1.5
+    description: "Creator content causes a significant personal behavioral change."
+
+    patterns:
+      - '\b(because of you|thanks to you)\b.{0,80}\b(i started|i stopped|i decided|i bought|i changed)\b'
+      - '\b(you).{0,50}\b(inspired|encouraged)\b.{0,50}\b(me|my life)\b'
+      - '\b(your content|your videos).{0,50}\b(changed|improved|fixed|saved)\b.{0,50}\b(my life|my career|my work)\b'
+
+  emotional_comfort:
+    weight: 1.5
+    description: "Viewer describes the creator's content as a source of emotional comfort."
+
+    patterns:
+      - '\b(watching you|watching your videos|your videos|your content)\b.{0,60}\b(comforts|calms|soothes)\b'
+      - '\b(your videos|your content)\b.{0,60}\b(gives me|brings me)\b.{0,30}\b(peace|comfort|hope|joy)\b'
+      - '\b(watching you)\b.{0,50}\b(makes me feel safe)\b'
+
+  long_term_attachment:
+    weight: 1.0
+    description: "Viewer describes a long-term personal attachment to the creator."
+
+    patterns:
+      - '\b(i.ve watched you for (years|so long))\b'
+      - '\b(i.ve been watching (you|your channel) since)\b'
+      - '\b(i grew up watching you)\b'
+      - '\b(you were part of my childhood)\b'
+      - '\b(watched you since i was)\b'
+
+  personal_impact:
+    weight: 1.0
+    description: "Viewer describes meaningful personal impact from the creator."
+
+    patterns:
+      - '\b(changed|saved|helped|improved|inspired|fixed)\b.{0,50}\b(my life|my work|me|my career|my family)\b'
+      - '\b(this video|you)\b.{0,50}\b(inspired|encouraged|reminded|taught)\b.{0,20}\bme\b'
+      - '\b(because of you|thanks to you|your content)\b.{0,50}\b(i started|i decided|i bought|i stopped)\b'
+
+# ------------------------------------------------------------
+# First / second person language
+#
+# These are contextual signals, NOT standalone evidence.
+# ------------------------------------------------------------
+
+linguistic_signals:
+  first_person:
+    weight: 0.10
+    patterns:
+      - '\b(i|i''m|i''ve|i''ll|me|my|mine|myself)\b'
+
+  second_person:
+    weight: 0.10
+    patterns:
+      - '\b(you|you''re|you''ve|your|yours|yourself)\b'
+
+  creator_reference:
+    weight: 0.15
+    patterns:
+      - '\b(your videos|your content|your channel|watching you|following you)\b'
+
+# ------------------------------------------------------------
+# Generic / weak language.
+#
+# These are explicitly NOT parasocial signals.
+# We use them to suppress false positives.
+# ------------------------------------------------------------
+
+negative_patterns:
+  generic_praise:
+    weight: -0.30
+    patterns:
+      - '\b(great video|great video!|awesome video|amazing video)\b'
+      - '\b(love this video|love this channel|great content)\b'
+      - '\b(first|early|who else is watching)\b'
+
+  generic_instructional_you:
+    weight: -0.20
+    patterns:
+      - '\b(if you click|if you go|you can find|you need to)\b'
+      - '\b(you should update|you should install|you should use)\b'
+
+# ------------------------------------------------------------
+# Classification thresholds
+# ------------------------------------------------------------
+
+thresholds:
+  weak: 0.20
+  moderate: 0.40
+  strong: 0.65
+  very_strong: 0.85

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Community Resonance Upvote Filter (ΔR){% endblock %}
+{% block subtitle %}Baseline Comment Sentiment vs Top-Upvoted Community Takes{% endblock %}
+{% block chart_script %}
+  const option = {
+  animationDuration: 2000,
+  legend: { data: ['Baseline Audience', 'Top-Upvoted Comments'], textStyle: { color: '#a1a1aa', fontSize: 14 } },
+  grid: { left: '10%', right: '10%', top: '18%', bottom: '12%' },
+  xAxis: {
+  type: 'category',
+  data: ['Toxicity Rate (%)', 'Parasocial Density (/1k)'],
+  axisLabel: { color: '#f4f4f5', fontSize: 16, fontWeight: 'bold' }
+  },
+  yAxis: {
+  type: 'value',
+  splitLine: { lineStyle: { color: 'rgba(255, 255, 255, 0.1)' } }
+  },
+  series: [
+  {
+  name: 'Baseline Audience',
+  type: 'bar',
+  data: [{{ baseline_tox }}, {{ baseline_para }}],
+  itemStyle: { color: '#3f3f46', borderRadius: [4, 4, 0, 0] },
+  barWidth: '25%'
+  },
+  {
+  name: 'Top-Upvoted Comments',
+  type: 'bar',
+  data: [{{ top_tox }}, {{ top_para }}],
+  itemStyle: { color: '#ff4d4d', borderRadius: [4, 4, 0, 0] },
+  barWidth: '25%'
+  }
+  ]
+  };
+  myChart.setOption(option);
+{% endblock %}

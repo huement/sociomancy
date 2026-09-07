@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Core Tribe Retention Ranking{% endblock %}
+{% block subtitle %}Repeat Viewer Ratio (%) Across Niche Peer Group{% endblock %}
+{% block chart_script %}
+  const channels = {{ channels | tojson }};
+  const values = {{ values | tojson }};
+  const option = {
+  animationDuration: 2200,
+  animationEasing: 'cubicOut',
+  grid: { left: '18%', right: '12%', top: '10%', bottom: '10%' },
+  xAxis: {
+  type: 'value',
+  axisLabel: { formatter: '{value}%', color: '#a1a1aa', fontSize: 14 },
+  splitLine: { lineStyle: { color: 'rgba(255, 255, 255, 0.1)' } }
+  },
+  yAxis: {
+  type: 'category',
+  data: channels,
+  inverse: true,
+  axisLabel: { color: '#f4f4f5', fontSize: 16, fontWeight: 'bold' }
+  },
+  series: [{
+  type: 'bar',
+  data: values.map((v, i) => ({
+  value: v,
+  itemStyle: {
+  color: channels[i] === '@{{ target_handle }}' ? '#ff4d4d' : '#3f3f46',
+  borderRadius: [0, 6, 6, 0]
+  }
+  })),
+  label: {
+  show: true,
+  position: 'right',
+  formatter: '{c}%',
+  color: '#ffffff',
+  fontWeight: 'bold',
+  fontSize: 14
+  },
+  barWidth: '45%'
+  }]
+  };
+  myChart.setOption(option);
+{% endblock %}

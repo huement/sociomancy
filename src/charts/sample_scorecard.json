@@ -1,0 +1,147 @@
+{
+  "channel_title": "Channel 404 News with Don Flurgundy",
+  "handle": "donflurgundy",
+  "subscribers": 8860,
+  "total_comments_sampled": 1124,
+  "pillars": {
+    "p1_empathy_vs_toxicity": {
+      "toxicity_rate_pct": 19.04,
+      "avg_toxicity_score": 0.1976,
+      "dominant_emotion": "neutral"
+    },
+    "p2_core_tribe_ratio": {
+      "tribe_ratio_pct": 26.29,
+      "repeat_commenters_count": 178
+    },
+    "p3_parasocial_impact": {
+      "parasocial_density_per_1k": 1.78,
+      "longform_take_rate_pct": 13.26,
+      "avg_comment_length_words": 28.07
+    },
+    "p4_cold_audience_stress_test": {
+      "delta_toxicity": -0.0633,
+      "baseline_toxicity_pct": 22.24,
+      "push_toxicity_pct": 14.62,
+      "push_videos_count": 5
+    }
+  },
+  "discovery": {
+    "discovered_at": "2026-09-06T03:29:34.560396+00:00",
+    "target_sampled_commenters": 677,
+    "min_subscribers_filter": 1000,
+    "candidates": [
+      {
+        "channel_id": "UCvEpn92BFViOlex0FTp4PaQ",
+        "channel_title": "DermyWermy",
+        "handle": "DermyWermy",
+        "discovery_source": "Approach B (Video Search Padding)",
+        "semantic_similarity": 0.7673107385635376,
+        "jaccard_similarity": 0.0113,
+        "shared_commenters_count": 8,
+        "target_audience_overlap_pct": 1.18,
+        "candidate_audience_overlap_pct": 19.51,
+        "audience_affinity": 2.2254,
+        "peer_score": 0.9783709062099457,
+        "selection_rationale": "Selected via Approach B (Video Padding). Verified audience affinity: 2.2254 (8 shared users)."
+      },
+      {
+        "channel_id": "UCQmWt938Z8TkdPq6uasdlbA",
+        "channel_title": "diesel patches",
+        "handle": "dieselpatches",
+        "discovery_source": "Approach A (Topic & Channel Graph)",
+        "semantic_similarity": 0.7549275159835815,
+        "jaccard_similarity": 0.0021,
+        "shared_commenters_count": 2,
+        "target_audience_overlap_pct": 0.3,
+        "candidate_audience_overlap_pct": 0.68,
+        "audience_affinity": 0.4163,
+        "peer_score": 0.5192851337909699,
+        "selection_rationale": "Selected via Approach A (Channel Graph). Semantic Sim: 0.75, Audience Overlap: 2 shared users (0.3%)."
+      },
+      {
+        "channel_id": "UCMrpRnyBJhgVBy3rm0K4P5w",
+        "channel_title": "YellowFlash 2",
+        "handle": "YellowFlash2",
+        "discovery_source": "Approach B (Video Search Padding)",
+        "semantic_similarity": 0.7291638851165771,
+        "jaccard_similarity": 0.0021,
+        "shared_commenters_count": 2,
+        "target_audience_overlap_pct": 0.3,
+        "candidate_audience_overlap_pct": 0.75,
+        "audience_affinity": 0.4286,
+        "peer_score": 0.5081901368141175,
+        "selection_rationale": "Selected via Approach B (Video Padding). Verified audience affinity: 0.4286 (2 shared users)."
+      },
+      {
+        "channel_id": "UCTmPSm2hC150-QrjdzWSu4Q",
+        "channel_title": "Chud Logic",
+        "handle": "ChudLogic",
+        "discovery_source": "Approach B (Video Search Padding)",
+        "semantic_similarity": 0.7575635313987732,
+        "jaccard_similarity": 0.0013,
+        "shared_commenters_count": 1,
+        "target_audience_overlap_pct": 0.15,
+        "candidate_audience_overlap_pct": 0.93,
+        "audience_affinity": 0.2583,
+        "peer_score": 0.4812349422693253,
+        "selection_rationale": "Selected via Approach B (Video Padding). Verified audience affinity: 0.2583 (1 shared users)."
+      },
+      {
+        "channel_id": "UCSFy-1JrpZf0tFlRZfo-Rvw",
+        "channel_title": "Sydney Watson",
+        "handle": "SydneyWatson",
+        "discovery_source": "Approach A (Topic & Channel Graph)",
+        "semantic_similarity": 0.755736231803894,
+        "jaccard_similarity": 0.0,
+        "shared_commenters_count": 0,
+        "target_audience_overlap_pct": 0.0,
+        "candidate_audience_overlap_pct": 0.0,
+        "audience_affinity": 0.0,
+        "peer_score": 0.4156549274921418,
+        "selection_rationale": "Selected via Approach A (Channel Graph). Semantic Sim: 0.76, Audience Overlap: 0 shared users (0.0%)."
+      },
+      {
+        "channel_id": "UC_iUeUzozCHEReJ-shKcCYA",
+        "channel_title": "Internet Anarchist",
+        "handle": "InternetAnarchist",
+        "discovery_source": "Approach A (Topic & Channel Graph)",
+        "semantic_similarity": 0.7467533349990845,
+        "jaccard_similarity": 0.0,
+        "shared_commenters_count": 0,
+        "target_audience_overlap_pct": 0.0,
+        "candidate_audience_overlap_pct": 0.0,
+        "audience_affinity": 0.0,
+        "peer_score": 0.4107143342494965,
+        "selection_rationale": "Selected via Approach A (Channel Graph). Semantic Sim: 0.75, Audience Overlap: 0 shared users (0.0%)."
+      },
+      {
+        "channel_id": "UC_paeCX1-ySLcHAkcAqSy_w",
+        "channel_title": "Mossi Clips",
+        "handle": "MossiClips",
+        "discovery_source": "Approach A (Topic & Channel Graph)",
+        "semantic_similarity": 0.7441565990447998,
+        "jaccard_similarity": 0.0,
+        "shared_commenters_count": 0,
+        "target_audience_overlap_pct": 0.0,
+        "candidate_audience_overlap_pct": 0.0,
+        "audience_affinity": 0.0,
+        "peer_score": 0.40928612947463994,
+        "selection_rationale": "Selected via Approach A (Channel Graph). Semantic Sim: 0.74, Audience Overlap: 0 shared users (0.0%)."
+      },
+      {
+        "channel_id": "UCIveFvW-ARp_B_RckhweNJw",
+        "channel_title": "StevenCrowder",
+        "handle": "StevenCrowder",
+        "discovery_source": "Approach A (Topic & Channel Graph)",
+        "semantic_similarity": 0.7386766076087952,
+        "jaccard_similarity": 0.0,
+        "shared_commenters_count": 0,
+        "target_audience_overlap_pct": 0.0,
+        "candidate_audience_overlap_pct": 0.0,
+        "audience_affinity": 0.0,
+        "peer_score": 0.4062721341848374,
+        "selection_rationale": "Selected via Approach A (Channel Graph). Semantic Sim: 0.74, Audience Overlap: 0 shared users (0.0%)."
+      }
+    ]
+  }
+}

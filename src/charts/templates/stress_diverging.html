@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Cold Audience Algorithmic Stress Test (ΔT){% endblock %}
+{% block subtitle %}Toxicity Shift when Viral Algorithms Push Content to Non-Subscribers{% endblock %}
+{% block chart_script %}
+  const channels = {{ channels | tojson }};
+  const values = {{ deltas | tojson }};
+  const option = {
+  animationDuration: 2000,
+  grid: { left: '15%', right: '10%', top: '10%', bottom: '10%' },
+  xAxis: {
+  type: 'value',
+  axisLabel: { formatter: '{value} pts', color: '#a1a1aa', fontSize: 14 },
+  splitLine: { lineStyle: { color: 'rgba(255, 255, 255, 0.1)' } }
+  },
+  yAxis: {
+  type: 'category',
+  data: channels,
+  axisLabel: { color: '#f4f4f5', fontSize: 16, fontWeight: 'bold' }
+  },
+  series: [{
+  type: 'bar',
+  data: values.map((v, i) => ({
+  value: v,
+  itemStyle: {
+  color: channels[i] === '@{{ target_handle }}' ? '#00e676' : (v < 0 ? '#29b6f6' : '#ff5252'),
+  borderRadius: v < 0 ? [4, 0, 0, 4] : [0, 4, 4, 0]
+  }
+  })),
+  barWidth: '50%'
+  }]
+  };
+  myChart.setOption(option);
+{% endblock %}

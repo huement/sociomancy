@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Audience Emotion Spectrum{% endblock %}
+{% block subtitle %}Dominant Sentiment Breakdown Derived via ONNX Neural Inference{% endblock %}
+{% block chart_script %}
+  const option = {
+  animationDuration: 2000,
+  tooltip: { trigger: 'item' },
+  series: [{
+  name: 'Dominant Emotion',
+  type: 'pie',
+  radius: ['45%', '75%'],
+  avoidLabelOverlap: false,
+  itemStyle: { borderRadius: 10, borderColor: '#121217', borderWidth: 4 },
+  label: { show: true, formatter: '{b}: {d}%', color: '#ffffff', fontSize: 16, fontWeight: 'bold' },
+  data: [
+  { value: 65, name: 'Neutral', itemStyle: { color: '#71717a' } },
+  { value: 18, name: 'Admiration', itemStyle: { color: '#00e676' } },
+  { value: 12, name: 'Disgust / Anger', itemStyle: { color: '#ff4d4d' } },
+  { value: 5, name: 'Curiosity', itemStyle: { color: '#29b6f6' } }
+  ]
+  }]
+  };
+  myChart.setOption(option);
+{% endblock %}
