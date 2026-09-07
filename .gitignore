@@ -22,3 +22,4 @@ models/*
 output_cards/**/*.png
 output_cards/**/*.json
 output_charts/**/*.mp4
+output_charts/**/*.png
