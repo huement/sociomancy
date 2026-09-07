@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8" />
@@ -72,20 +72,13 @@
     <div class="chart-frame">
       <div class="chart-header">
         <div>
-          <div class="chart-title">
-            {% block title %}Chart Title{% endblock %}
-          </div>
-          <div class="chart-subtitle">
-            {% block subtitle %}Chart Subtitle{% endblock %}
-          </div>
+          <div class="chart-title">{% block title %}Chart Title{% endblock %}</div>
+          <div class="chart-subtitle">{% block subtitle %}Chart Subtitle{% endblock %}</div>
         </div>
-        <div class="chart-badge">
-          {% block badge %}TUBE-MANCY DATA{% endblock %}
-        </div>
+        <div class="chart-badge">{% block badge %}Sociomancy DATA{% endblock %}</div>
       </div>
       <div id="main" class="chart-container"></div>
     </div>
-
     <script>
       // Load custom ECharts theme JSON
       const customTheme = {{ theme_json | safe }};

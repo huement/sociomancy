@@ -9,7 +9,7 @@ from PIL import Image, ImageChops
 try:
     from moviepy import ImageSequenceClip
 except ImportError:
-    from moviepy.editor import ImageSequenceCli
+    from moviepy.editor import ImageSequenceClip
 
 # Video Render Controls
 DURATION = 3  # Seconds to record ECharts animation
@@ -62,6 +62,34 @@ async def record_html_to_frames(html_path: Path):
     await browser.close()
 
 
+async def record_html_to_png(html_path: Path, output_png_path: Path):
+    """Waits for chart animation to complete, then takes a single cropped PNG screenshot."""
+    TEMP_FRAME_DIR.mkdir(parents=True, exist_ok=True)
+    temp_raw_path = TEMP_FRAME_DIR / "temp_screenshot.png"
+
+    browser = await launch(headless=True, args=["--no-sandbox"])
+    page = await browser.newPage()
+    await page.setViewport({
+        "width": VIEWPORT_WIDTH,
+        "height": VIEWPORT_HEIGHT
+    })
+    await page.goto(f"file://{html_path.resolve()}")
+
+    # Wait for full animation duration plus padding
+    await asyncio.sleep(DURATION + 0.5)
+
+    await page.screenshot({'path': str(temp_raw_path)})
+    await browser.close()
+
+    # Crop and save final image
+    if temp_raw_path.exists():
+        img = Image.open(temp_raw_path)
+        cropped = autocrop_frame(img)
+        output_png_path.parent.mkdir(parents=True, exist_ok=True)
+        cropped.save(output_png_path)
+        temp_raw_path.unlink()
+
+
 def compile_frames_to_mp4(output_mp4_path: Path):
     output_mp4_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -92,9 +120,11 @@ def cleanup_temp_frames():
         TEMP_FRAME_DIR.rmdir()
 
 
-def render_chart_video(template_name: str, render_context: dict,
-                       output_mp4_path: Path):
-    """Renders Jinja HTML template and exports animated MP4 video."""
+def render_chart(template_name: str,
+                 render_context: dict,
+                 output_path: Path,
+                 as_png: bool = False):
+    """Renders Jinja HTML template and exports either animated MP4 or static PNG."""
     env = Environment(loader=FileSystemLoader(TEMPLATES_DIR))
     template = env.get_template(template_name)
 
@@ -107,20 +137,27 @@ def render_chart_video(template_name: str, render_context: dict,
     with open(temp_html_path, "w", encoding="utf-8") as f:
         f.write(rendered_html)
 
-    print(f"[*] Recording ECharts animation for {output_mp4_path.stem}...")
-    asyncio.run(record_html_to_frames(temp_html_path))
-    compile_frames_to_mp4(output_mp4_path)
+    if as_png:
+        print(f"[*] Rendering static PNG for {output_path.stem}...")
+        asyncio.run(record_html_to_png(temp_html_path, output_path))
+        print(f"[+] Static chart PNG saved to {output_path}\n")
+    else:
+        print(f"[*] Recording ECharts animation for {output_path.stem}...")
+        asyncio.run(record_html_to_frames(temp_html_path))
+        compile_frames_to_mp4(output_path)
+        print(f"[+] Animated chart MP4 saved to {output_path}\n")
+
     cleanup_temp_frames()
 
     if temp_html_path.exists():
         temp_html_path.unlink()
 
-    print(f"[+] Animated chart MP4 saved to {output_mp4_path}\n")
-
 
 def generate_all_channel_charts(target_handle: str,
-                                output_dir_base: str = "./output_charts"):
+                                output_dir_base: str = "./output_charts",
+                                as_png: bool = False):
     clean_handle = target_handle.lstrip("@").lower()
+    ext = "png" if as_png else "mp4"
 
     benchmark_path = Path(f"data/processed/{clean_handle}_benchmark.json")
     scorecard_path = Path(f"data/processed/{clean_handle}_scorecard.json")
@@ -143,32 +180,34 @@ def generate_all_channel_charts(target_handle: str,
     p = sc["pillars"]
 
     # 1. DNA Radar
-    render_chart_video(
-        "dna_radar.html", {
-            "target_handle": clean_handle,
-            "z_scores": {
-                "toxicity": m["toxicity_rate"]["z_score"],
-                "tribe": m["tribe_ratio"]["z_score"],
-                "parasocial": m["parasocial_density"]["z_score"],
-                "stress": m["stress_delta"]["z_score"],
-                "authenticity": m["authenticity_score"]["z_score"],
-            }
-        }, output_dir / f"{clean_handle}_dna_radar.mp4")
+    render_chart("dna_radar.html", {
+        "target_handle": clean_handle,
+        "z_scores": {
+            "toxicity": m["toxicity_rate"]["z_score"],
+            "tribe": m["tribe_ratio"]["z_score"],
+            "parasocial": m["parasocial_density"]["z_score"],
+            "stress": m["stress_delta"]["z_score"],
+            "authenticity": m["authenticity_score"]["z_score"],
+        }
+    },
+                 output_dir / f"{clean_handle}_dna_radar.{ext}",
+                 as_png=as_png)
 
     # 2. Peer Ranking Bar
-    render_chart_video(
-        "peer_ranking.html", {
-            "target_handle":
-            clean_handle,
-            "channels": [f"@{clean_handle}", "Niche Mean"],
-            "values": [
-                p["p2_core_tribe_ratio"]["tribe_ratio_pct"],
-                m["tribe_ratio"]["niche_mean"]
-            ]
-        }, output_dir / f"{clean_handle}_peer_ranking.mp4")
+    render_chart("peer_ranking.html", {
+        "target_handle":
+        clean_handle,
+        "channels": [f"@{clean_handle}", "Niche Mean"],
+        "values": [
+            p["p2_core_tribe_ratio"]["tribe_ratio_pct"],
+            m["tribe_ratio"]["niche_mean"]
+        ]
+    },
+                 output_dir / f"{clean_handle}_peer_ranking.{ext}",
+                 as_png=as_png)
 
     # 3. Resonance Delta Paired Bar
-    render_chart_video(
+    render_chart(
         "resonance_delta.html", {
             "target_handle": clean_handle,
             "baseline_tox": p["p1_empathy_vs_toxicity"]["toxicity_rate_pct"],
@@ -177,19 +216,20 @@ def generate_all_channel_charts(target_handle: str,
             p["p3_parasocial_impact"]["parasocial_density_per_1k"],
             "top_para":
             p["p3_parasocial_impact"]["top_comment_parasocial_density"]
-        }, output_dir / f"{clean_handle}_resonance_delta.mp4")
+        },
+        output_dir / f"{clean_handle}_resonance_delta.{ext}",
+        as_png=as_png)
 
     # 4. Stress Diverging Bar
-    render_chart_video(
-        "stress_diverging.html", {
-            "target_handle":
-            clean_handle,
-            "channels": [f"@{clean_handle}", "Niche Mean"],
-            "deltas": [
-                m["stress_delta"]["target_value"],
-                m["stress_delta"]["niche_mean"]
-            ]
-        }, output_dir / f"{clean_handle}_stress_test.mp4")
+    render_chart("stress_diverging.html", {
+        "target_handle":
+        clean_handle,
+        "channels": [f"@{clean_handle}", "Niche Mean"],
+        "deltas":
+        [m["stress_delta"]["target_value"], m["stress_delta"]["niche_mean"]]
+    },
+                 output_dir / f"{clean_handle}_stress_test.{ext}",
+                 as_png=as_png)
 
     # 5. Peer Scatter Matrix
     candidates = sc.get("discovery", {}).get("candidates", [])
@@ -199,31 +239,35 @@ def generate_all_channel_charts(target_handle: str,
         "affinity": c.get("audience_affinity", 0.0),
         "source": c.get("discovery_source", "Approach A")
     } for c in candidates]
-    render_chart_video("peer_scatter.html", {
+    render_chart("peer_scatter.html", {
         "target_handle": clean_handle,
         "scatter_data": scatter_data
-    }, output_dir / f"{clean_handle}_peer_scatter.mp4")
+    },
+                 output_dir / f"{clean_handle}_peer_scatter.{ext}",
+                 as_png=as_png)
 
     # 6. Emotion Spectrum Donut
-    render_chart_video("emotion_donut.html", {"target_handle": clean_handle},
-                       output_dir / f"{clean_handle}_emotion_donut.mp4")
+    render_chart("emotion_donut.html", {"target_handle": clean_handle},
+                 output_dir / f"{clean_handle}_emotion_donut.{ext}",
+                 as_png=as_png)
 
     # 7. Bot & Anomaly Breakdown
     auth_score = p["p5_bot_and_authenticity"]["comment_authenticity_score"]
     suspicious_pct = p["p5_bot_and_authenticity"]["suspicious_rate_pct"]
-    render_chart_video(
-        "bot_breakdown.html", {
-            "target_handle": clean_handle,
-            "authenticity_score": auth_score,
-            "duplicate_pct": round(suspicious_pct * 0.6, 2),
-            "cluster_pct": round(suspicious_pct * 0.4, 2)
-        }, output_dir / f"{clean_handle}_bot_breakdown.mp4")
+    render_chart("bot_breakdown.html", {
+        "target_handle": clean_handle,
+        "authenticity_score": auth_score,
+        "duplicate_pct": round(suspicious_pct * 0.6, 2),
+        "cluster_pct": round(suspicious_pct * 0.4, 2)
+    },
+                 output_dir / f"{clean_handle}_bot_breakdown.{ext}",
+                 as_png=as_png)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description=
-        "Generate animated MP4 ECharts visualizations for Tube-mancy analysis."
+        "Generate animated MP4 or static PNG ECharts visualizations for Tube-mancy analysis."
     )
     parser.add_argument("handle",
                         type=str,
@@ -233,6 +277,11 @@ if __name__ == "__main__":
                         type=str,
                         default="./output_charts",
                         help="Output folder")
+    parser.add_argument("--png",
+                        action="store_true",
+                        help="Export static PNG images instead of MP4 videos")
     args = parser.parse_args()
 
-    generate_all_channel_charts(args.handle, output_dir_base=args.output_dir)
+    generate_all_channel_charts(args.handle,
+                                output_dir_base=args.output_dir,
+                                as_png=args.png)
