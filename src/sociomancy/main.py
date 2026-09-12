@@ -1,5 +1,6 @@
 import argparse
 import sys
+import subprocess
 from pathlib import Path
 from datetime import datetime
 import pandas as pd
@@ -22,6 +23,51 @@ warnings.filterwarnings("ignore", module="torch.onnx")
 # Mute Hugging Face verbosity
 os.environ["HF_HUB_DISABLE_SYMLINKS_WARNING"] = "1"
 os.environ["TRANSFORMERS_VERBOSITY"] = "error"
+
+
+def build_existing_cards(channel_identifier: str = None,
+                         output_dir_base: str = "./output_cards"):
+    """Rebuilds PNG cards for a specific handle or ALL handles found in output_cards/."""
+    base_path = Path(output_dir_base)
+
+    if not base_path.exists():
+        print(f"[!] Error: Directory '{output_dir_base}' does not exist.")
+        sys.exit(1)
+
+    # 1. Target single channel if handle provided
+    if channel_identifier:
+        clean_handle = channel_identifier.lstrip("@").lower()
+        target_json = base_path / clean_handle / "related.json"
+        if not target_json.exists():
+            print(f"[!] Error: Card JSON file not found at {target_json}")
+            print(
+                "    Please ensure you have run discovery for this channel first."
+            )
+            sys.exit(1)
+        targets = [target_json]
+    # 2. Otherwise discover all related.json files across all subfolders
+    else:
+        targets = list(base_path.glob("*/related.json"))
+        if not targets:
+            print(f"[!] No related.json files found in {output_dir_base}/*/")
+            sys.exit(1)
+
+    print(f"[*] Found {len(targets)} channel folder(s) to process...\n")
+
+    for cards_json_path in targets:
+        output_dir = cards_json_path.parent
+        print(
+            f"[*] Rebuilding PNG cards for @{output_dir.name} from: {cards_json_path}"
+        )
+
+        subprocess.run([
+            "uv", "run", "python", "src/cards/build_cards.py",
+            str(cards_json_path), "-o",
+            str(output_dir)
+        ],
+                       check=True)
+
+        print(f"[+] Rebuilt cards in {output_dir}\n")
 
 
 def parse_pillars(pillar_str: str) -> set[int]:
@@ -66,16 +112,15 @@ def run_pipeline(channel_identifier: str,
     print(f"Video Limit: {video_limit} | Comments/Video: {comments_per_video}")
     print(f"==================================================\n")
 
-    # STEP 1: Ingestion (Incremental Cache Check)
+    # STEP 1: Ingestion
     print("[1/3] Executing YouTube API Data Ingestion...")
     collect_and_save_channel_data(clean_handle,
                                   video_limit=video_limit,
                                   comments_per_video=comments_per_video)
 
-    # Note: Pillars 3, 4, and 5 depend on Pillar 1's processed CSV feature vectors.
     requires_p1_csv = bool({1, 3, 4, 5}.intersection(pillars))
 
-    # STEP 2: ML Feature Extraction (Pillar 1 Incremental Cache Check)
+    # STEP 2: ML Feature Extraction
     if requires_p1_csv:
         print("\n[2/3] Running ONNX Local ML Model Pipeline (Pillar 1)...")
         process_empathy_and_toxicity(raw_json_path)
@@ -151,7 +196,6 @@ def run_pipeline(channel_identifier: str,
             f"    • Suspicious Comments: {bot_stats['suspicious_rate_pct']}% (Avg Bot Confidence: {bot_stats['avg_bot_confidence']}/100)"
         )
 
-    # Export consolidated JSON scorecard when all 5 pillars are run
     if pillars == {1, 2, 3, 4, 5}:
         scorecard = generate_channel_scorecard(clean_handle)
         print(
@@ -169,8 +213,16 @@ def main():
 
     parser.add_argument(
         "channel",
+        nargs="?",
         type=str,
-        help="YouTube Channel Handle (e.g., @mkbhd) or Channel ID")
+        default=None,
+        help="YouTube Channel Handle (optional if using --cards-only)")
+    parser.add_argument(
+        "--cards-only",
+        action="store_true",
+        help=
+        "Bypass analysis pipeline and build PNG cards using output_cards/<handle>/related.json (all channels if no handle given)"
+    )
     parser.add_argument(
         "-p",
         "--pillars",
@@ -202,6 +254,16 @@ def main():
                         help="Filter uploads until date (YYYY-MM-DD).")
 
     args = parser.parse_args()
+
+    if args.cards_only:
+        build_existing_cards(args.channel)
+        return
+
+    # Require channel parameter for standard analysis run
+    if not args.channel:
+        parser.error(
+            "the following arguments are required: channel (or pass --cards-only)"
+        )
 
     run_pipeline(channel_identifier=args.channel,
                  video_limit=args.limit,

@@ -7,10 +7,12 @@ from html2image import Html2Image
 
 CARDS_DIR = Path(__file__).parent
 
+
 def load_template() -> Template:
     template_path = CARDS_DIR / "template.html"
     with open(template_path, "r", encoding="utf-8") as f:
         return Template(f.read())
+
 
 def load_channel_data(data_path: Path) -> list[dict]:
     """Loads JSON file and normalizes output to a list of dicts."""
@@ -19,6 +21,7 @@ def load_channel_data(data_path: Path) -> list[dict]:
     if isinstance(data, dict):
         return [data]
     return data
+
 
 def dev_mode(data_path: Path):
     """Renders JSON data to preview.html and opens it in the browser."""
@@ -32,24 +35,29 @@ def dev_mode(data_path: Path):
     print(f"Updated preview: {preview_path}")
     webbrowser.open(preview_path.as_uri())
 
+
 def prod_mode(data_path: Path, output_dir: Path):
-    """Generates transparent PNG cards for each channel in the JSON file."""
+    """Generates high-resolution transparent PNG cards."""
     channels = load_channel_data(data_path)
     template = load_template()
 
     output_dir.mkdir(parents=True, exist_ok=True)
-    hti = Html2Image(
-        output_path=str(output_dir),
-        custom_flags=["--default-background-color=00000000"]
-    )
+
+    # Enable 2x high-DPI device scale factor
+    hti = Html2Image(output_path=str(output_dir),
+                     custom_flags=[
+                         "--default-background-color=00000000",
+                         "--force-device-scale-factor=2", "--log-level=3",
+                         "--silent", "--disable-logging"
+                     ])
 
     for channel in channels:
         rendered = template.render(channels=[channel])
         handle = channel.get("handle", "channel").replace("@", "").strip()
         filename = f"{handle}_card.png"
 
-        # Exact width and height matching CSS container dimensions
-        hti.screenshot(html_str=rendered, save_as=filename, size=(580, 220))
+        # Match new 2x dimensions (1160 x 440)
+        hti.screenshot(html_str=rendered, save_as=filename, size=(1160, 440))
         print(f"Generated card: {output_dir / filename}")
 
 
