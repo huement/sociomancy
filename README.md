@@ -8,6 +8,8 @@ Currently this library is only able to analyze YouTube channels, but the pipelin
 
 An end-to-end data processing and machine learning pipeline that fetches YouTube channel and comment data via the YouTube Data API v3, processes text through local ONNX Transformer models, and outputs statistical analytics on community health, audience retention depth, and engagement authenticity.
 
+![preview](preview.gif)
+
 ---
 
 ## QUICK START
