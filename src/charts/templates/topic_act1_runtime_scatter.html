@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Act 1: Video Runtime vs. Views (n = {{ video_count }}){% endblock %}
+{% block subtitle %}Long-form gaming & software news performance by channel tier (Last 45 Days){% endblock %}
+{% block badge %}ACT 1 · PACKAGING{% endblock %}
+
+{% block chart_script %}
+const tierData = {{ tier_series | tojson }};
+
+myChart.setOption({
+  animationDuration: 1400,
+  tooltip: {
+    trigger: 'item',
+    backgroundColor: '#18181b',
+    borderColor: '#3f3f46',
+    textStyle: { color: '#f4f4f5' },
+    formatter: function(p) {
+      const d = p.data;
+      return `<strong>${d[2]}...</strong><br/>Channel: ${d[3]}<br/>Runtime: <b>${d[0]} min</b><br/>Views: <b>${d[1].toLocaleString()}</b>`;
+    }
+  },
+  legend: {
+    top: 10,
+    textStyle: { color: '#d4d4d8', fontSize: 14 }
+  },
+  grid: { left: 95, right: 50, top: 70, bottom: 75 },
+  xAxis: {
+    type: 'value',
+    name: 'Runtime (Minutes)',
+    nameLocation: 'middle',
+    nameGap: 38,
+    nameTextStyle: { color: '#a1a1aa', fontSize: 15 },
+    min: 0,
+    max: 60,
+    splitLine: { lineStyle: { color: '#27272a' } }
+  },
+  yAxis: {
+    type: 'log',
+    name: 'Total Views (Log Scale)',
+    nameTextStyle: { color: '#a1a1aa', fontSize: 15 },
+    splitLine: { lineStyle: { color: '#27272a' } }
+  },
+  series: [
+    {
+      name: 'Large (500K+)',
+      type: 'scatter',
+      symbolSize: 14,
+      itemStyle: { color: 'rgb(249,68,90)', opacity: 0.85 },
+      data: tierData['Large (500K+)'] || [],
+      markArea: {
+        silent: true,
+        itemStyle: { color: 'rgba(92, 215, 193, 0.08)' },
+        label: { show: true, position: 'insideTop', color: '#5cd7c1', formatter: '8–14m Sweet Spot' },
+        data: [[{ xAxis: 8 }, { xAxis: 14 }]]
+      }
+    },
+    {
+      name: 'Mid (50K-500K)',
+      type: 'scatter',
+      symbolSize: 12,
+      itemStyle: { color: 'rgb(92,215,193)', opacity: 0.85 },
+      data: tierData['Mid (50K-500K)'] || []
+    },
+    {
+      name: 'Small (<50K)',
+      type: 'scatter',
+      symbolSize: 10,
+      itemStyle: { color: '#fff59c', opacity: 0.75 },
+      data: tierData['Small (<50K)'] || []
+    }
+  ]
+});
+{% endblock %}

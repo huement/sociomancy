@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}{{ chart_title | default("Act 1: Pre-Launch Week vs. Launch Weekend") }}{% endblock %}
+{% block subtitle %}{{ chart_subtitle | default("YouTube sentiment share, comment toxicity, and Google search interest. Day is the video publish date.") }}{% endblock %}
+{% block badge %}{{ chart_badge | default("ACT 1 · VIBE SHIFT") }}{% endblock %}
+
+{% block chart_script %}
+myChart.setOption({
+  animationDuration: 1400,
+  tooltip: { trigger: 'axis' },
+  legend: { top: 8, textStyle: { color: '#d4d4d8', fontSize: 14 } },
+  grid: { left: 150, right: 90, top: 80, bottom: 70 },
+  xAxis: {
+    type: 'category',
+    data: {{ days | tojson }},
+    axisLabel: { color: '#e4e4e7', fontSize: 14 }
+  },
+  yAxis: [
+    {
+      type: 'value',
+      name: 'Sentiment share',
+      min: 0,
+      max: 100,
+      nameGap: 18,
+      nameTextStyle: { color: '#a1a1aa' },
+      axisLabel: { formatter: '{value}%', color: '#a1a1aa' },
+      splitLine: { lineStyle: { color: '#27272a' } }
+    },
+    {
+      type: 'value',
+      name: 'Search interest',
+      min: 0,
+      max: 100,
+      position: 'right',
+      nameTextStyle: { color: '#5cd7c1' },
+      axisLabel: { color: '#5cd7c1' },
+      splitLine: { show: false }
+    },
+    {
+      type: 'value',
+      name: 'Toxicity %',
+      min: 0,
+      max: 20,
+      position: 'left',
+      offset: 92,
+      nameGap: 12,
+      nameTextStyle: { color: '#f9445a' },
+      axisLabel: { formatter: '{value}%', color: '#f9445a' },
+      splitLine: { show: false }
+    }
+  ],
+  series: [
+    {
+      name: 'Positive',
+      type: 'bar',
+      stack: 'sentiment',
+      barMaxWidth: 28,
+      itemStyle: { color: 'rgba(92,215,193,0.85)' },
+      data: {{ positive | tojson }}
+    },
+    {
+      name: 'Neutral',
+      type: 'bar',
+      stack: 'sentiment',
+      itemStyle: { color: 'rgba(82,82,91,0.9)' },
+      data: {{ neutral | tojson }}
+    },
+    {
+      name: 'Negative',
+      type: 'bar',
+      stack: 'sentiment',
+      itemStyle: { color: 'rgba(249,68,90,0.8)', borderRadius: [4, 4, 0, 0] },
+      data: {{ negative | tojson }},
+      markLine: {
+        silent: true,
+        symbol: 'none',
+        label: { formatter: 'Launch', color: '#fff59c', fontSize: 13 },
+        lineStyle: { color: '#fff59c', type: 'dashed', width: 2 },
+        data: [{ xAxis: {{ launch_label | tojson }} }]
+      }
+    },
+    {
+      name: 'Search interest',
+      type: 'line',
+      yAxisIndex: 1,
+      smooth: true,
+      connectNulls: false,
+      z: 4,
+      lineStyle: { width: 4, color: '#5cd7c1' },
+      itemStyle: { color: '#5cd7c1' },
+      symbolSize: 8,
+      data: {{ interest | tojson }}
+    },
+    {
+      name: 'Avg toxicity',
+      type: 'line',
+      yAxisIndex: 2,
+      smooth: true,
+      connectNulls: false,
+      z: 5,
+      lineStyle: { width: 4, color: '#f9445a' },
+      itemStyle: { color: '#f9445a' },
+      symbolSize: 8,
+      data: {{ toxicity | tojson }}
+    }
+  ]
+});
+{% endblock %}

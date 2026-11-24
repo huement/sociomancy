@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Act 1: Which Title Syntax Wins Clicks & Breakouts?{% endblock %}
+{% block subtitle %}Median Views vs. View-to-Subscriber Breakout Ratio across title patterns{% endblock %}
+{% block badge %}ACT 1 · TITLE HOOKS{% endblock %}
+
+{% block chart_script %}
+myChart.setOption({
+  animationDuration: 1400,
+  tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+  legend: { top: 10, textStyle: { color: '#d4d4d8', fontSize: 14 } },
+  grid: { left: 95, right: 95, top: 75, bottom: 80 },
+  xAxis: {
+    type: 'category',
+    data: {{ hook_labels | tojson }},
+    axisLabel: { color: '#e4e4e7', fontSize: 13, interval: 0 }
+  },
+  yAxis: [
+    {
+      type: 'value',
+      name: 'Median Views',
+      nameTextStyle: { color: '#a1a1aa' },
+      splitLine: { lineStyle: { color: '#27272a' } }
+    },
+    {
+      type: 'value',
+      name: 'Views / Subscribers',
+      nameTextStyle: { color: '#5cd7c1' },
+      splitLine: { show: false }
+    }
+  ],
+  series: [
+    {
+      name: 'Median Views',
+      type: 'bar',
+      barMaxWidth: 48,
+      itemStyle: { color: 'rgb(249,68,90)', borderRadius: [6, 6, 0, 0] },
+      data: {{ median_views | tojson }}
+    },
+    {
+      name: 'Median Breakout Ratio (Views/Subs)',
+      type: 'bar',
+      yAxisIndex: 1,
+      barMaxWidth: 48,
+      itemStyle: { color: 'rgb(92,215,193)', borderRadius: [6, 6, 0, 0] },
+      data: {{ median_breakout | tojson }}
+    }
+  ]
+});
+{% endblock %}

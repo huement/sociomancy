@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Where the Upvoted Slice Disagrees{% endblock %}
+{% block subtitle %}Percentage points versus all negatives. Right means a larger share of the liked or upvoted texts.{% endblock %}
+{% block badge %}ACT 3 · UPVOTED{% endblock %}
+
+{% block chart_script %}
+myChart.setOption({
+  animationDuration: 1400,
+  tooltip: {
+    trigger: 'axis',
+    axisPointer: { type: 'shadow' },
+    formatter: function (items) {
+      var item = items[0];
+      var data = item.data || {};
+      var sign = item.value > 0 ? '+' : '';
+      return [
+        item.axisValue,
+        sign + item.value + ' points',
+        (data.topCount || 0) + ' of ' + (data.topTotal || 0) + ' ' + data.topNoun + ', versus ' + (data.allCount || 0) + ' of ' + (data.allTotal || 0)
+      ].join('<br/>');
+    }
+  },
+  grid: { left: 320, right: 50, top: 30, bottom: 50 },
+  xAxis: {
+    type: 'value',
+    min: {{ axis_min }},
+    max: {{ axis_max }},
+    name: 'Percentage points',
+    nameLocation: 'middle',
+    nameGap: 28,
+    nameTextStyle: { color: '#a1a1aa' },
+    axisLabel: { color: '#a1a1aa' },
+    splitLine: { lineStyle: { color: '#27272a' } }
+  },
+  yAxis: {
+    type: 'category',
+    inverse: true,
+    data: {{ labels | tojson }},
+    axisLabel: { color: '#f4f4f5', fontSize: 14, lineHeight: 18 }
+  },
+  series: [
+    {
+      name: 'Share shift',
+      type: 'bar',
+      barMaxWidth: 18,
+      data: {{ points | tojson }},
+      itemStyle: {
+        borderRadius: 3,
+        color: function (params) {
+          return params.value >= 0 ? '#f9445a' : '#5cd7c1';
+        }
+      },
+      markLine: {
+        silent: true,
+        symbol: 'none',
+        label: { show: false },
+        lineStyle: { color: '#a1a1aa', type: 'solid', width: 1 },
+        data: [{ xAxis: 0 }]
+      }
+    }
+  ]
+});
+{% endblock %}

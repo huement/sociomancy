@@ -7,6 +7,14 @@
 | peer_scatter     | 4-Quadrant Scatter Grid   | scorecard.json (discovery)       | Semantic Similarity (X) vs. Audience Affinity (Y) competitor plot     |
 | emotion_donut    | Ring Donut Chart          | scorecard.json (P1 Emotions)     | Displays top emotion distribution with dominant emotion in center     |
 | bot_breakdown    | Stacked Horizontal Bar    | scorecard.json (P5 Flags)        | Proportional segments showing exact copy-paste vs. cluster spam       |
+| act1_runtime_scatter | Scatter (log views) | `echarts_payload.json` (`act1_packaging_formula`) | Runtime vs. views for long-form gaming/software news, split by channel tier |
+| act1_title_hooks | Grouped bar | `act1_packaging_formula` | Median views and view-to-sub ratio for title hooks vs. plain titles |
+| act2_format_engagement | Grouped bar | Act 1 formats + `act2_format_toxicity_summary` | Comment rate and toxicity resonance ($\Delta R_{\text{tox}}$) by video format |
+| act2_comment_categories | Donut | `act2_top_comments_sample` | Supportive vs. Critical vs. Industry/Developer comment share |
+| act3_ai_timeline | Multi-axis line/bar | `act3_ai_youtube_volume` + `act3_ai_search_trends` | 12-month upload volume, negative-title share, and YouTube Trends interest |
+| act4_decay_curves | Multi-line | `act4_decay_curves` | Daily uploads as % of peak; solid = outrage, dashed = regulation |
+
+Topic charts render with `uv run python src/charts/build_charts.py --topics` (add `--png` for stills). They read `data/processed/topics/echarts_payload.json`, written by `youtube_algo_analyzer.py`.
 
 ### TODO
 

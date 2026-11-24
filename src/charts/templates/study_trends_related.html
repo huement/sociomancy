@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Rising Searches Around Launch{% endblock %}
+{% block subtitle %}Related queries for “GTA 6”. Bar length is growth. Breakout means Google would not put a number on it.{% endblock %}
+{% block badge %}TRENDS · RISING{% endblock %}
+
+{% block chart_script %}
+myChart.setOption({
+  animationDuration: 1400,
+  tooltip: {
+    trigger: 'axis',
+    axisPointer: { type: 'shadow' },
+    formatter: function (items) {
+      var lines = [items[0].axisValue];
+      items.forEach(function (item) {
+        var raw = item.data && item.data.raw ? item.data.raw : '';
+        lines.push(item.marker + item.seriesName + ': ' + (raw || '—'));
+      });
+      return lines.join('<br/>');
+    }
+  },
+  legend: { top: 8, textStyle: { color: '#d4d4d8', fontSize: 14 } },
+  grid: { left: 280, right: 40, top: 70, bottom: 50 },
+  xAxis: {
+    type: 'value',
+    name: 'Growth',
+    nameTextStyle: { color: '#a1a1aa' },
+    axisLabel: { color: '#a1a1aa' },
+    splitLine: { lineStyle: { color: '#27272a' } }
+  },
+  yAxis: {
+    type: 'category',
+    inverse: true,
+    data: {{ queries | tojson }},
+    axisLabel: { color: '#f4f4f5', fontSize: 13 }
+  },
+  series: [
+    {
+      name: 'Pre-launch',
+      type: 'bar',
+      barMaxWidth: 14,
+      itemStyle: { color: '#5d1ccd', borderRadius: [0, 4, 4, 0] },
+      data: {{ pre | tojson }}
+    },
+    {
+      name: 'Launch weekend',
+      type: 'bar',
+      barMaxWidth: 14,
+      itemStyle: { color: '#f9445a', borderRadius: [0, 4, 4, 0] },
+      data: {{ launch | tojson }}
+    }
+  ]
+});
+{% endblock %}

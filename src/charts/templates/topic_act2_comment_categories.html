@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Act 2: What Drives Top Comments? (n = {{ total_comments }}){% endblock %}
+{% block subtitle %}Zero-shot BART-MNLI intent classification of top-voted comments{% endblock %}
+{% block badge %}ACT 2 · AUDIENCE INTENT{% endblock %}
+
+{% block chart_script %}
+myChart.setOption({
+  animationDuration: 1400,
+  tooltip: { trigger: 'item', formatter: '{b}: <b>{c}</b> ({d}%)' },
+  legend: { bottom: 10, textStyle: { color: '#e4e4e7', fontSize: 15 } },
+  color: ['rgb(249,68,90)', 'rgb(92,215,193)', 'rgb(93,28,205)', '#fff59c'],
+  series: [
+    {
+      name: 'Comment Intent',
+      type: 'pie',
+      radius: ['46%', '74%'],
+      center: ['50%', '47%'],
+      itemStyle: { borderRadius: 10, borderColor: '#121217', borderWidth: 4 },
+      label: {
+        color: '#ffffff',
+        fontSize: 16,
+        fontWeight: 600,
+        formatter: '{b}\n{d}%'
+      },
+      data: {{ pie_items | tojson }}
+    }
+  ],
+  graphic: [
+    {
+      type: 'text',
+      left: 'center',
+      top: '45%',
+      style: {
+        text: 'DOMINANT\n{{ dominant_category }}',
+        textAlign: 'center',
+        fill: '#a1a1aa',
+        fontSize: 16,
+        fontWeight: 700
+      }
+    }
+  ]
+});
+{% endblock %}

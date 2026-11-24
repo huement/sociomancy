@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Act 2: Launch-Weekend YouTube by Channel Size{% endblock %}
+{% block subtitle %}Baseline comment toxicity versus the most-liked comments in each tier{% endblock %}
+{% block badge %}ACT 2 · CHANNEL TIERS{% endblock %}
+
+{% block chart_script %}
+myChart.setOption({
+  animationDuration: 1400,
+  tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+  legend: { top: 8, textStyle: { color: '#d4d4d8', fontSize: 14 } },
+  grid: { left: 80, right: 40, top: 80, bottom: 90 },
+  xAxis: {
+    type: 'category',
+    data: {{ tiers | tojson }},
+    axisLabel: { color: '#ffffff', fontSize: 15, fontWeight: 600, lineHeight: 20 }
+  },
+  yAxis: {
+    type: 'value',
+    name: 'Avg toxicity (%)',
+    nameTextStyle: { color: '#a1a1aa' },
+    axisLabel: { formatter: '{value}%', color: '#a1a1aa' },
+    splitLine: { lineStyle: { color: '#27272a' } }
+  },
+  series: [
+    {
+      name: 'All comments',
+      type: 'bar',
+      barMaxWidth: 56,
+      itemStyle: { color: '#3DDC84', borderRadius: [6, 6, 0, 0] },
+      data: {{ baseline | tojson }}
+    },
+    {
+      name: 'Top comments',
+      type: 'bar',
+      barMaxWidth: 56,
+      itemStyle: { color: '#f9445a', borderRadius: [6, 6, 0, 0] },
+      data: {{ top | tojson }}
+    }
+  ]
+});
+{% endblock %}

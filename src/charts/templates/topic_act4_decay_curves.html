@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Act 4: How Fast Do Gaming Controversies Die?{% endblock %}
+{% block subtitle %}Daily YouTube upload velocity (% of Peak Day) — Outrage vs. Regulation{% endblock %}
+{% block badge %}ACT 4 · DECAY CURVES{% endblock %}
+
+{% block chart_script %}
+const rawSeries = {{ event_series | tojson }};
+const palette = ['#f9445a', '#fe5722', '#5cd7c1', '#fff59c', '#1f87e8'];
+
+const seriesList = rawSeries.map((s, idx) => ({
+  name: s.name,
+  type: 'line',
+  smooth: true,
+  symbolSize: 8,
+  lineStyle: {
+    width: 4,
+    type: s.is_regulation ? 'dashed' : 'solid',
+    color: palette[idx % palette.length]
+  },
+  itemStyle: { color: palette[idx % palette.length] },
+  data: s.data
+}));
+
+myChart.setOption({
+  animationDuration: 1500,
+  tooltip: {
+    trigger: 'axis',
+    formatter: function(params) {
+      let html = `<strong>${params[0].axisValue}</strong><br/>`;
+      params.forEach(p => {
+        if (p.data) {
+          html += `${p.marker} ${p.seriesName}: <b>${p.data.value}%</b> (${p.data.raw_uploads.toLocaleString()} uploads · ${p.data.gdelt} press articles)<br/>`;
+        }
+      });
+      return html;
+    }
+  },
+  legend: {
+    top: 8,
+    textStyle: { color: '#e4e4e7', fontSize: 13 }
+  },
+  grid: { left: 80, right: 50, top: 85, bottom: 60 },
+  xAxis: {
+    type: 'category',
+    data: {{ day_labels | tojson }},
+    axisLabel: { color: '#e4e4e7', fontSize: 13 }
+  },
+  yAxis: {
+    type: 'value',
+    name: '% of Peak Day Uploads',
+    min: 0,
+    max: 100,
+    nameTextStyle: { color: '#a1a1aa' },
+    splitLine: { lineStyle: { color: '#27272a' } }
+  },
+  series: seriesList
+});
+{% endblock %}

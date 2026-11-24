@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}What the Negative Texts Are About{% endblock %}
+{% block subtitle %}Share of labeled complaints. Each row is its own set, so the percents add to 100.{% endblock %}
+{% block badge %}ACT 3 · MIX{% endblock %}
+
+{% block chart_script %}
+myChart.setOption({
+  animationDuration: 1400,
+  tooltip: {
+    trigger: 'axis',
+    axisPointer: { type: 'shadow' },
+    formatter: function (items) {
+      var lines = [items[0].axisValue];
+      items.forEach(function (item) {
+        var data = item.data || {};
+        lines.push(item.marker + item.seriesName + ': ' + (data.count || 0) + ' (' + item.value + '%)');
+      });
+      return lines.join('<br/>');
+    }
+  },
+  legend: { top: 8, textStyle: { color: '#d4d4d8', fontSize: 14 } },
+  grid: { left: 280, right: 40, top: 70, bottom: 40 },
+  xAxis: {
+    type: 'value',
+    min: 0,
+    max: 100,
+    axisLabel: { formatter: '{value}%', color: '#a1a1aa' },
+    splitLine: { lineStyle: { color: '#27272a' } }
+  },
+  yAxis: {
+    type: 'category',
+    inverse: true,
+    data: {{ labels | tojson }},
+    axisLabel: { color: '#f4f4f5', fontSize: 15 }
+  },
+  series: [
+    {
+      name: 'Gameplay & Design',
+      type: 'bar',
+      stack: 'mix',
+      barMaxWidth: 28,
+      itemStyle: { color: '#5cd7c1' },
+      data: {{ gameplay | tojson }}
+    },
+    {
+      name: 'Pricing / Value',
+      type: 'bar',
+      stack: 'mix',
+      itemStyle: { color: '#fff59c' },
+      data: {{ pricing | tojson }}
+    },
+    {
+      name: 'Technical / Performance',
+      type: 'bar',
+      stack: 'mix',
+      itemStyle: { color: '#f9445a', borderRadius: [0, 4, 4, 0] },
+      data: {{ technical | tojson }}
+    }
+  ]
+});
+{% endblock %}

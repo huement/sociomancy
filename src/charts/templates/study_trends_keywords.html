@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}{{ chart_title | default("Search Interest: Web") }}{% endblock %}
+{% block subtitle %}{{ chart_subtitle | default("GTA 6 and GTA VI on one 0–100 web-search scale") }}{% endblock %}
+{% block badge %}TRENDS · KEYWORDS{% endblock %}
+
+{% block chart_script %}
+myChart.setOption({
+  animationDuration: 1400,
+  tooltip: { trigger: 'axis' },
+  legend: { top: 8, textStyle: { color: '#d4d4d8', fontSize: 14 } },
+  grid: { left: 70, right: 40, top: 80, bottom: 60 },
+  xAxis: {
+    type: 'category',
+    data: {{ days | tojson }},
+    axisLabel: { color: '#e4e4e7', fontSize: 14 }
+  },
+  yAxis: {
+    type: 'value',
+    name: 'Search interest',
+    min: 0,
+    max: 100,
+    nameTextStyle: { color: '#a1a1aa' },
+    axisLabel: { color: '#a1a1aa' },
+    splitLine: { lineStyle: { color: '#27272a' } }
+  },
+  series: {{ series | tojson }}
+});
+{% endblock %}

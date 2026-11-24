@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Toxicity Before and After Launch{% endblock %}
+{% block subtitle %}Mean toxicity score by platform. Metacritic has no pre-launch reviews in this window.{% endblock %}
+{% block badge %}CROSS-PLATFORM{% endblock %}
+
+{% block chart_script %}
+myChart.setOption({
+  animationDuration: 1400,
+  tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, valueFormatter: function (v) { return v == null ? '' : v + '%'; } },
+  legend: { top: 8, textStyle: { color: '#d4d4d8', fontSize: 14 } },
+  grid: { left: 80, right: 40, top: 80, bottom: 60 },
+  xAxis: {
+    type: 'category',
+    data: {{ sources | tojson }},
+    axisLabel: { color: '#ffffff', fontSize: 16, fontWeight: 600 }
+  },
+  yAxis: {
+    type: 'value',
+    name: 'Mean toxicity (%)',
+    nameTextStyle: { color: '#a1a1aa' },
+    axisLabel: { formatter: '{value}%', color: '#a1a1aa' },
+    splitLine: { lineStyle: { color: '#27272a' } }
+  },
+  series: [
+    {
+      name: 'Pre-launch (Nov 12–18)',
+      type: 'bar',
+      barMaxWidth: 64,
+      itemStyle: { color: '#5d1ccd', borderRadius: [6, 6, 0, 0] },
+      data: {{ pre | tojson }}
+    },
+    {
+      name: 'Launch weekend (Nov 19–23)',
+      type: 'bar',
+      barMaxWidth: 64,
+      itemStyle: { color: '#f9445a', borderRadius: [6, 6, 0, 0] },
+      data: {{ launch | tojson }}
+    }
+  ]
+});
+{% endblock %}

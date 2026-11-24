@@ -285,6 +285,15 @@ wheels = [
 ]
 
 [[package]]
+name = "isodate"
+version = "0.7.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/54/4d/e940025e2ce31a8ce1202635910747e5a87cc3a6a6bb2d00973375014749/isodate-0.7.2.tar.gz", hash = "sha256:4cd1aa0f43ca76f4a6c6c0292a85f40b35ec2e43e315b59f06e6d32171a953e6", size = 29705, upload-time = "2024-10-08T23:04:11.5Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/15/aa/0aca39a37d3c7eb941ba736ede56d689e7be91cab5d9ca846bde3999eba6/isodate-0.7.2-py3-none-any.whl", hash = "sha256:28009937d8031054830160fce6d409ed342816b543597cece116d966c6d99e15", size = 22320, upload-time = "2024-10-08T23:04:09.501Z" },
+]
+
+[[package]]
 name = "jinja2"
 version = "3.1.6"
 source = { registry = "https://pypi.org/simple" }
@@ -726,6 +735,7 @@ source = { editable = "." }
 dependencies = [
     { name = "google-api-python-client" },
     { name = "html2image" },
+    { name = "isodate" },
     { name = "jinja2" },
     { name = "moviepy" },
     { name = "numpy" },
@@ -737,15 +747,18 @@ dependencies = [
     { name = "pyppeteer" },
     { name = "python-dotenv" },
     { name = "pyyaml" },
+    { name = "requests" },
     { name = "textual" },
     { name = "torch" },
     { name = "transformers" },
+    { name = "trendspy" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "google-api-python-client", specifier = ">=2.100.0" },
     { name = "html2image", specifier = ">=2.0.7" },
+    { name = "isodate", specifier = ">=0.7.2" },
     { name = "jinja2", specifier = ">=3.1.6" },
     { name = "moviepy", specifier = ">=2.2.1" },
     { name = "numpy", specifier = "<2.0.0" },
@@ -757,9 +770,11 @@ requires-dist = [
     { name = "pyppeteer", specifier = ">=2.0.0" },
     { name = "python-dotenv" },
     { name = "pyyaml", specifier = ">=6.0.3" },
+    { name = "requests", specifier = ">=2.34.2" },
     { name = "textual", specifier = ">=0.50.0" },
     { name = "torch", specifier = "<=2.2.2" },
     { name = "transformers", specifier = "<4.40.0" },
+    { name = "trendspy", specifier = ">=0.1.6" },
 ]
 
 [[package]]
@@ -849,6 +864,21 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/11/a9/a8ece5f26d59d76f55117580e138f992075623623672c920c42ad5e26f85/transformers-4.39.3.tar.gz", hash = "sha256:2586e5ff4150f122716fc40f5530e92871befc051848fbe82600969c535b762d", size = 7610890, upload-time = "2024-04-02T09:36:06.403Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/15/fc/7b6dd7e1adc0a6407b845ed4be1999e98b6917d0694e57316d140cc85484/transformers-4.39.3-py3-none-any.whl", hash = "sha256:7838034a12cca3168247f9d2d1dba6724c9de3ae0f73a108258c6b8fc5912601", size = 8803702, upload-time = "2024-04-02T09:36:00.871Z" },
+]
+
+[[package]]
+name = "trendspy"
+version = "0.1.6"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "numpy" },
+    { name = "pandas" },
+    { name = "python-dateutil" },
+    { name = "requests" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/cc/46/d96f675c9bd302a93df7c9e8f1d26bce93198b0735dfa8c940a08e84355d/trendspy-0.1.6.tar.gz", hash = "sha256:27d83f79b8d961ae4ed4d05b1207e9afc2b14976a08de7af9013bf6b553c9536", size = 241171, upload-time = "2024-12-25T12:05:16.782Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/3b/f4/25c2e75a20493d6b94bd4d1ff6adb3591f59f712698be615cbb42db8aafc/trendspy-0.1.6-py3-none-any.whl", hash = "sha256:74795fee0028e27e139007c9b805e705f6fc1a90c7cc3c38112cbb3264837cbf", size = 27943, upload-time = "2024-12-25T12:05:13.355Z" },
 ]
 
 [[package]]

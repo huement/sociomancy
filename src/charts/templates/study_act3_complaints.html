@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Act 3: What the Negative Text Is About{% endblock %}
+{% block subtitle %}Share of negative texts versus the high-engagement slice, by platform{% endblock %}
+{% block badge %}ACT 3 · COMPLAINTS{% endblock %}
+
+{% block chart_script %}
+myChart.setOption({
+  animationDuration: 1400,
+  tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, valueFormatter: function (v) { return v + '%'; } },
+  legend: { top: 8, textStyle: { color: '#d4d4d8', fontSize: 14 } },
+  grid: { left: 280, right: 50, top: 70, bottom: 50 },
+  xAxis: {
+    type: 'value',
+    max: 70,
+    axisLabel: { formatter: '{value}%', color: '#a1a1aa' },
+    splitLine: { lineStyle: { color: '#27272a' } }
+  },
+  yAxis: {
+    type: 'category',
+    inverse: true,
+    data: {{ labels | tojson }},
+    axisLabel: { color: '#f4f4f5', fontSize: 14 }
+  },
+  series: [
+    {
+      name: 'All negative texts',
+      type: 'bar',
+      barMaxWidth: 16,
+      itemStyle: { color: '#5d1ccd', borderRadius: [0, 4, 4, 0] },
+      data: {{ all_share | tojson }}
+    },
+    {
+      name: 'High-engagement slice',
+      type: 'bar',
+      barMaxWidth: 16,
+      itemStyle: { color: '#fff59c', borderRadius: [0, 4, 4, 0] },
+      data: {{ top_share | tojson }}
+    }
+  ]
+});
+{% endblock %}

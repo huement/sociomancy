@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Act 2: Format Comment Rate & Resonance Delta (ΔR_tox){% endblock %}
+{% block subtitle %}Comment-to-view rate (%) and Baseline vs. Top-3 Liked comment toxicity (%){% endblock %}
+{% block badge %}ACT 2 · COMMENT ENGINE{% endblock %}
+
+{% block chart_script %}
+myChart.setOption({
+  animationDuration: 1400,
+  tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+  legend: { top: 10, textStyle: { color: '#d4d4d8', fontSize: 14 } },
+  grid: { left: 85, right: 85, top: 75, bottom: 65 },
+  xAxis: {
+    type: 'category',
+    data: {{ formats | tojson }},
+    axisLabel: { color: '#ffffff', fontSize: 15, fontWeight: 600 }
+  },
+  yAxis: [
+    {
+      type: 'value',
+      name: 'Avg Comment Rate (%)',
+      nameTextStyle: { color: '#fff59c' },
+      splitLine: { lineStyle: { color: '#27272a' } }
+    },
+    {
+      type: 'value',
+      name: 'Avg Toxicity Score (%)',
+      nameTextStyle: { color: '#f9445a' },
+      splitLine: { show: false }
+    }
+  ],
+  series: [
+    {
+      name: 'Comment Rate (%)',
+      type: 'bar',
+      barMaxWidth: 46,
+      itemStyle: { color: '#fff59c', borderRadius: [6, 6, 0, 0] },
+      data: {{ comment_rates | tojson }}
+    },
+    {
+      name: 'Baseline Comment Toxicity (%)',
+      type: 'bar',
+      yAxisIndex: 1,
+      barMaxWidth: 46,
+      itemStyle: { color: 'rgb(249,68,90)', borderRadius: [6, 6, 0, 0] },
+      data: {{ baseline_tox | tojson }}
+    },
+    {
+      name: 'Top-3 Liked Toxicity (%)',
+      type: 'bar',
+      yAxisIndex: 1,
+      barMaxWidth: 46,
+      itemStyle: { color: 'rgb(92,215,193)', borderRadius: [6, 6, 0, 0] },
+      data: {{ top3_tox | tojson }}
+    }
+  ]
+});
+{% endblock %}

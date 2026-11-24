@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}The Words Inside the Complaints{% endblock %}
+{% block subtitle %}Size is how many complaints use the word, once per text. Teal is gameplay, yellow is price, red is technical.{% endblock %}
+{% block badge %}ACT 3 · WORDS{% endblock %}
+
+{% block chart_script %}
+myChart.dispose();
+chartDom.innerHTML = '';
+chartDom.style.position = 'relative';
+chartDom.style.overflow = 'hidden';
+
+const words = {{ words | tojson }};
+const pad = 10;
+const values = words.map((word) => word.value);
+const minValue = Math.min.apply(null, values);
+const maxValue = Math.max.apply(null, values);
+
+function fontSize(value) {
+  const span = maxValue - minValue || 1;
+  const t = Math.pow((value - minValue) / span, 0.75);
+  return Math.round(22 + t * 112);
+}
+
+const measure = document.createElement('canvas').getContext('2d');
+const placed = [];
+const width = chartDom.clientWidth;
+const height = chartDom.clientHeight;
+const centerX = width / 2;
+const centerY = height / 2;
+
+words.forEach((word) => {
+  const size = fontSize(word.value);
+  measure.font = '700 ' + size + 'px Segoe UI, sans-serif';
+  const boxWidth = Math.ceil(measure.measureText(word.name).width) + pad * 2;
+  const boxHeight = Math.ceil(size * 1.15) + pad;
+  let chosen = null;
+  for (let step = 0; step < 2800; step++) {
+    const angle = step * 0.42;
+    const radius = step * 0.55;
+    const x = centerX + Math.cos(angle) * radius - boxWidth / 2;
+    const y = centerY + Math.sin(angle) * radius - boxHeight / 2;
+    if (x < 4 || y < 4 || x + boxWidth > width - 4 || y + boxHeight > height - 4) {
+      continue;
+    }
+    const hit = placed.some((other) => !(
+      x + boxWidth < other.x || other.x + other.w < x || y + boxHeight < other.y || other.y + other.h < y
+    ));
+    if (!hit) {
+      chosen = { x: x, y: y, w: boxWidth, h: boxHeight };
+      break;
+    }
+  }
+  if (!chosen) {
+    chosen = { x: centerX - boxWidth / 2, y: centerY - boxHeight / 2, w: boxWidth, h: boxHeight };
+  }
+  placed.push(chosen);
+
+  const el = document.createElement('div');
+  el.textContent = word.name;
+  el.style.position = 'absolute';
+  el.style.left = chosen.x + 'px';
+  el.style.top = (chosen.y + pad / 2) + 'px';
+  el.style.width = chosen.w + 'px';
+  el.style.font = '700 ' + size + 'px Segoe UI, sans-serif';
+  el.style.letterSpacing = '-0.03em';
+  el.style.color = word.textStyle.color;
+  el.style.whiteSpace = 'nowrap';
+  el.style.textAlign = 'center';
+  el.style.transformOrigin = 'center center';
+  el.style.willChange = 'transform, opacity';
+  chartDom.appendChild(el);
+  word.el = el;
+  word.dx = centerX - (chosen.x + chosen.w / 2);
+  word.dy = centerY - (chosen.y + chosen.h / 2);
+});
+
+function easeOut(amount) {
+  return 1 - Math.pow(1 - amount, 3);
+}
+
+window.renderWordFrame = function (progress) {
+  const count = words.length;
+  words.forEach((word, index) => {
+    const start = index === 0 ? 0.0 : 0.12 + (index / (count - 1)) * 0.62;
+    const span = index === 0 ? 0.16 : 0.18;
+    let amount = (progress - start) / span;
+    amount = Math.max(0, Math.min(1, amount));
+    const eased = easeOut(amount);
+    const scale = 0.12 + 0.88 * eased;
+    word.el.style.opacity = String(eased);
+    word.el.style.transform = 'translate(' + ((1 - eased) * word.dx) + 'px, ' + ((1 - eased) * word.dy) + 'px) scale(' + scale + ')';
+  });
+};
+
+window.renderWordFrame(0);
+{% endblock %}

@@ -1,0 +1,98 @@
+{
+  "id": "gta6",
+  "title": "GTA 6 launch",
+  "focus_window": "launch_weekend",
+  "windows": [
+    {
+      "name": "pre_launch",
+      "start": "2026-11-12",
+      "end": "2026-11-18"
+    },
+    {
+      "name": "launch_weekend",
+      "start": "2026-11-19",
+      "end": "2026-11-23"
+    }
+  ],
+  "trends": {
+    "keywords": [
+      "GTA 6",
+      "GTA VI"
+    ],
+    "timeframe": "2026-11-12 2026-11-22"
+  },
+  "metacritic": {
+    "slug": "grand-theft-auto-vi",
+    "max_reviews": 300,
+    "negative_score_at_most": 5,
+    "include_mixed_and_positive": true,
+    "date_slack_days": 1
+  },
+  "reddit": {
+    "user_agent": "sociomancy/0.1 (launch study; local research)",
+    "search_query": "\"GTA 6\" OR \"GTA VI\" OR \"GTA6\" OR \"Grand Theft Auto VI\" OR \"Grand Theft Auto 6\"",
+    "posts_per_sub": 25,
+    "comments_per_post": 15,
+    "sort_comments_by": "score",
+    "subreddits": [
+      {
+        "name": "GTA6",
+        "queries": []
+      },
+      {
+        "name": "GTA",
+        "queries": [
+          "GTA 6",
+          "GTA VI"
+        ]
+      },
+      {
+        "name": "gaming",
+        "queries": [
+          "GTA 6",
+          "GTA VI"
+        ]
+      }
+    ]
+  },
+  "youtube": {
+    "query": "GTA 6 OR \"GTA VI\" OR \"Grand Theft Auto VI\"",
+    "videos_per_window": 25,
+    "comments_per_video": 40,
+    "min_duration_sec": 65,
+    "min_comments": 20,
+    "order": "relevance",
+    "tiers": [
+      {
+        "name": "Large (1M+)",
+        "min_subscribers": 1000000
+      },
+      {
+        "name": "Mid (50K-1M)",
+        "min_subscribers": 50000
+      },
+      {
+        "name": "Small (<50K)",
+        "min_subscribers": 0
+      }
+    ]
+  },
+  "complaints": [
+    {
+      "name": "Technical / Performance",
+      "hypothesis": "about technical performance, bugs, crashes, or framerate"
+    },
+    {
+      "name": "Gameplay & Design",
+      "hypothesis": "about gameplay, missions, story, or game design"
+    },
+    {
+      "name": "Pricing / Value",
+      "hypothesis": "about price, monetization, or value for money"
+    }
+  ],
+  "scoring": {
+    "top_per_thread": 3,
+    "metacritic_top_fraction": 0.2
+  }
+}

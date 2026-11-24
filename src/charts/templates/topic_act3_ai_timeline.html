@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Act 3: 12 Months of "AI in Games" on YouTube{% endblock %}
+{% block subtitle %}Monthly YouTube upload volume vs. Google Trends interest & negative title framing (%){% endblock %}
+{% block badge %}ACT 3 · AI NARRATIVE{% endblock %}
+
+{% block chart_script %}
+myChart.setOption({
+  animationDuration: 1400,
+  tooltip: { trigger: 'axis' },
+  legend: { top: 10, textStyle: { color: '#d4d4d8', fontSize: 14 } },
+  grid: { left: 85, right: 85, top: 75, bottom: 65 },
+  xAxis: {
+    type: 'category',
+    data: {{ months | tojson }},
+    axisLabel: { color: '#e4e4e7', fontSize: 13 }
+  },
+  yAxis: [
+    {
+      type: 'value',
+      name: 'Est. Monthly Uploads',
+      nameTextStyle: { color: '#5d1ccd' },
+      splitLine: { lineStyle: { color: '#27272a' } }
+    },
+    {
+      type: 'value',
+      name: 'Index / Share (0–100)',
+      min: 0,
+      max: 100,
+      nameTextStyle: { color: '#5cd7c1' },
+      splitLine: { show: false }
+    }
+  ],
+  series: [
+    {
+      name: 'Est. YouTube Uploads',
+      type: 'bar',
+      barMaxWidth: 36,
+      itemStyle: { color: 'rgba(93, 28, 205, 0.75)', borderRadius: [5, 5, 0, 0] },
+      data: {{ upload_est | tojson }}
+    },
+    {
+      name: 'Negative / Outrage Titles (%)',
+      type: 'line',
+      yAxisIndex: 1,
+      smooth: true,
+      lineStyle: { width: 4, color: 'rgb(249,68,90)' },
+      itemStyle: { color: 'rgb(249,68,90)' },
+      symbolSize: 8,
+      data: {{ neg_pct | tojson }}
+    },
+    {
+      name: 'Search Interest (Trendspy)',
+      type: 'line',
+      yAxisIndex: 1,
+      smooth: true,
+      lineStyle: { width: 4, color: 'rgb(92,215,193)' },
+      itemStyle: { color: 'rgb(92,215,193)' },
+      symbolSize: 8,
+      data: {{ yt_trend | tojson }}
+    }
+  ]
+});
+{% endblock %}

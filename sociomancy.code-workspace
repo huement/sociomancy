@@ -7,5 +7,8 @@
 			"path": "../kick_grabber"
 		}
 	],
-	"settings": {}
+	"settings": {},
+	"trae": {
+		"workspaceId": "36fc301f1eafffde6f30cffb609f704f"
+	}
 }

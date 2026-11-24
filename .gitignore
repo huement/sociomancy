@@ -10,11 +10,8 @@ wheels/
 .venv
 .env
 
-data/processed/*.csv
-data/processed/*.json
-data/raw/*.csv
-data/raw/*.json
-models/*
+data/**/*
+models/**/*
 
 .DS_Store
 **/.DS_Store
@@ -22,4 +19,9 @@ models/*
 output_cards/**/*.png
 output_cards/**/*.json
 output_charts/**/*.mp4
+output_charts/**/*.ogv
 output_charts/**/*.png
+
+_articles/**
+
+*.csv
